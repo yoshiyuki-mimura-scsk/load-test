@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummy-api
+  template:
+    metadata:
+      labels:
+        app: dummy-api
+    spec:
+      containers:
+        - name: dummy-api
+          image: <your-registry-path>/dummy-api:latest   # イメージURL
+          ports:
+            - containerPort: 8000
