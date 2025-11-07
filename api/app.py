@@ -5,5 +5,4 @@ app = FastAPI()
 
 @app.get("/dummy")
 def dummy():
-    print("dummy")
     return {"message": "Hello, this is dummy!"}
