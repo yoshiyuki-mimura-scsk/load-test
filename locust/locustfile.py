@@ -1,7 +1,6 @@
 from locust import HttpUser, task, between
 
 class DummyApiUser(HttpUser):
-    env_value = "ENV_VALUE"
 
     # リクエスト間の待ち時間 (1秒から3秒)
     wait_time = between(1, 3)
@@ -26,8 +25,7 @@ class DummyApiUser(HttpUser):
     def no_test(self):
         # JWTトークンをヘッダーに追加してGETリクエストを送信
         headers = {
-            "Authorization": f"Bearer {self.token}",
-            "EnvValue": f"Bearer {self.env_value}"
+            "Authorization": f"Bearer {self.token}"
         }
         self.client.get("/test", headers=headers)
 
@@ -35,7 +33,6 @@ class DummyApiUser(HttpUser):
     def get_test(self):
         # JWTトークンをヘッダーに追加してGETリクエストを送信
         headers = {
-            "Authorization": f"Bearer {self.token}",
-            "EnvValue": f"Bearer {self.env_value}"
+            "Authorization": f"Bearer {self.token}"
         }
         self.client.get("/test", headers=headers)
