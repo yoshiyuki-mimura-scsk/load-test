@@ -10,8 +10,6 @@ class User(BaseModel):
 @app.post("/auth/login")
 def login(user: User):
     user_id = user.username.replace("user", "user_id")
-    print(f"user_name '{user.username}'")
-    print(f"user_id '{user_id}'")
     return {
         "user_id": user_id,
         "access_token": "dummy_token"
@@ -19,7 +17,6 @@ def login(user: User):
 
 @app.get("/users/{id}")
 def user_info(id: str):
-    print(f"user_id '{id}'")
     return {"id": id, "name": "user_name"}
 
 @app.get("/tasks")
