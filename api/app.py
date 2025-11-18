@@ -4,7 +4,8 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.post("/auth/login")
-def login():
+def login(username: str, password: str):
+    print(f"ユーザー '{username}'")
     return {
         "user_id": "user_id",
         "access_token": "dummy_token"
@@ -12,6 +13,7 @@ def login():
 
 @app.get("/users/{id}")
 def user_info(id: str):
+    print(f"ユーザー '{id}'")
     return {"id": id, "name": "user_name"}
 
 @app.get("/tasks")
