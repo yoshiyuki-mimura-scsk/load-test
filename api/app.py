@@ -1,11 +1,15 @@
-# ファイル名: app.py
 from fastapi import FastAPI
+from pydantic import BaseModel 
 
 app = FastAPI()
 
+class User(BaseModel):
+    username: str
+    password: str
+
 @app.post("/auth/login")
-def login(username: str, password: str):
-    print(f"ユーザー '{username}'")
+def login(user: User):
+    print(f"ユーザー '{user.username}'")
     return {
         "user_id": "user_id",
         "access_token": "dummy_token"
