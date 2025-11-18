@@ -1,6 +1,9 @@
 from locust import HttpUser, task, between
 
 class DummyApiUser(HttpUser):
+    env_value = "ENV_VALUE"
+
+    # リクエスト間の待ち時間 (1秒から3秒)
     wait_time = between(1, 3)
 
     @task
@@ -17,7 +20,7 @@ class DummyApiUser(HttpUser):
              "username": "your_username",
              "password": "your_password"
         })
-        return response.json()['access_token']  # 取得したトークンを返す
+        return response.json()['access_token']
  
     @task(0) # 0は実行されない。コメントアウトと同義
     def no_test(self):
