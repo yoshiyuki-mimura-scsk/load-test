@@ -9,7 +9,7 @@ def dummy():
 
 @app.post("/auth/login")
 def login():
-    return {"token": "dummy_token"}
+    return {"access_token": "dummy_token"}
 
 @app.get("/test")
 def test():
