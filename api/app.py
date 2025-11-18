@@ -5,10 +5,17 @@ app = FastAPI()
 
 @app.post("/auth/login")
 def login():
-    return {"access_token": "dummy_token"}
+    return {
+        "user_id": "user_id",
+        "access_token": "dummy_token"
+    }
 
-@app.get("/task")
-def task():
+@app.get("/users/{id}")
+def user_info(id: str):
+    return {"id": id, "name": "user_name"}
+
+@app.get("/tasks")
+def tasks():
     return [
             {"id": "1", "name": "task1"},
             {"id": "2", "name": "task2"},

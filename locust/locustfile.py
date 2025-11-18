@@ -80,6 +80,7 @@ class DummyApiUser(HttpUser):
                 "password": password
             })
             response.raise_for_status()  # ステータスコードが2xxでない場合に例外を発生させる
+            self.user_id = response.json()['user_id']
             self.token = response.json()['access_token']
             print(f"ユーザー '{self.username}' が正常にログインしました。")
         except Exception as e:
@@ -89,7 +90,7 @@ class DummyApiUser(HttpUser):
             self.stop() # ログイン失敗したユーザーは停止させる
  
     @task
-    def get_task(self):
+    def get_tasks(self):
         """
         取得したトークンを使って保護されたエンドポイントにアクセスするタスク。
         """
@@ -100,8 +101,22 @@ class DummyApiUser(HttpUser):
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
-        self.client.get("/task", headers=headers, name="/task (タスク一覧取得)")
+        self.client.get("/tasks", headers=headers, name="/tasks (タスク一覧取得)")
 
     @task
+    def get_user_info(self):
+        """
+        取得したトークンを使って保護されたエンドポイントにアクセスするタスク。
+        """
+        # ログインに失敗した場合 (tokenがない場合) はタスクを実行しない
+        if not hasattr(self, 'token') or not self.token:
+            return
+
+        headers = {
+            "Authorization": f"Bearer {self.token}"
+        }
+        self.client.get("/users/{self.user_id}", headers=headers, name="/users/id (ユーザ情報取得)")
+
+    @task(0)
     def get_dummy(self):
         self.client.get("/dummy")
