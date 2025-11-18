@@ -1,8 +1,7 @@
 import random
 from locust import HttpUser, task, between, events
 
-# 取得したユーザー情報を格納するグローバルリスト
-USERS = []
+target_users = []
 
 # test_startイベントフック: テスト開始時に一度だけ実行される
 @events.test_start.add_listener
@@ -10,32 +9,31 @@ def on_test_start(environment, **kwargs):
     """
     テスト開始前に一度だけ実行され、ユーザー一覧を取得します。
     """
-    global USERS
+    global target_users
     print("テスト開始: ユーザー一覧を取得します...")
     try:
-        # === 要変更 ===
-        # ユーザー一覧を取得するAPIエンドポイントを想定しています。
-        # 実際のAPIエンドポイントや取得方法に合わせて修正してください。
-        # ここではダミーとしてリストを直接定義していますが、実際にはAPIから取得します。
-        # 例: response = requests.get(f"{environment.host}/api/v1/users")
-        #     USERS = response.json()
-        
-        USERS = [
+        target_users = [
             {"username": "user1", "password": "password1"},
             {"username": "user2", "password": "password2"},
             {"username": "user3", "password": "password3"},
-            # ... 他のユーザー情報を追加
+            {"username": "user4", "password": "password4"},
+            {"username": "user5", "password": "password5"},
+            {"username": "user6", "password": "password6"},
+            {"username": "user7", "password": "password7"},
+            {"username": "user8", "password": "password8"},
+            {"username": "user9", "password": "password9"},
+            {"username": "user10", "password": "password10"}
         ]
 
-        if not USERS:
+        if not target_users:
             print("ユーザー一覧が空です。テストを停止します。")
             # ユーザーが一人もいない場合はテストを中止する
             environment.runner.quit()
         else:
             # ユーザーリストをランダムにシャッフルする（任意）
             # これにより、テスト実行ごとに異なる順序でユーザーが使われるようになります
-            random.shuffle(USERS)
-            print(f"成功: {len(USERS)} 人のユーザー情報を準備しました。")
+            random.shuffle(target_users)
+            print(f"成功: {len(target_users)} 人のユーザー情報を準備しました。")
 
     except Exception as e:
         print(f"ユーザー一覧の取得に失敗しました: {e}")
@@ -52,8 +50,8 @@ class DummyApiUser(HttpUser):
         このメソッドはシミュレートされるユーザーが起動するたびに実行されます。
         グローバルなユーザーリストから一人分の情報を取得し、ログインしてトークンを取得します。
         """
-        global USERS
-        if not USERS:
+        global target_users
+        if not target_users:
             # リストにユーザーが残っていない場合、この仮想ユーザーは何もせずに停止する
             print("利用可能なユーザーがいません。このワーカーを停止します。")
             self.stop()
@@ -61,7 +59,7 @@ class DummyApiUser(HttpUser):
 
         # ユーザーリストの末尾から一人分の認証情報を取り出す
         # .pop() を使うことで、各ワーカーにユニークなユーザーが割り当てられる
-        user_credentials = USERS.pop()
+        user_credentials = target_users.pop()
         self.username = user_credentials.get("username")
         password = user_credentials.get("password")
 
@@ -91,7 +89,7 @@ class DummyApiUser(HttpUser):
             self.stop() # ログイン失敗したユーザーは停止させる
  
     @task
-    def get_test(self):
+    def get_task(self):
         """
         取得したトークンを使って保護されたエンドポイントにアクセスするタスク。
         """
@@ -102,7 +100,7 @@ class DummyApiUser(HttpUser):
         headers = {
             "Authorization": f"Bearer {self.token}"
         }
-        self.client.get("/test", headers=headers, name="/test (認証済み)")
+        self.client.get("/task", headers=headers, name="/task (タスク一覧取得)")
 
     @task
     def get_dummy(self):
