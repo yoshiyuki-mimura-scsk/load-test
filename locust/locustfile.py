@@ -90,14 +90,6 @@ class DummyApiUser(HttpUser):
             print(f"ユーザー '{self.username}' のログインに失敗しました: {e}")
             self.stop() # ログイン失敗したユーザーは停止させる
  
-    def get_jwt_token(self):
-        # トークンを取得するための認証エンドポイントにリクエストを送信
-        response = self.client.post("/auth/login", json={
-             "username": "your_username",
-             "password": "your_password"
-        })
-        return response.json()['access_token']
- 
     @task
     def get_test(self):
         """
