@@ -22,6 +22,8 @@ spec:
             - /mnt/locust/locustfile.py
             - '--master'
             - '--web-host=0.0.0.0'
+            - "--host"
+            - "http://api.load-test.svc.cluster.local:8080"
           ports:
             - name: web-ui
               containerPort: 8089
