@@ -30,8 +30,6 @@ def on_test_start(environment, **kwargs):
             # ユーザーが一人もいない場合はテストを中止する
             environment.runner.quit()
         else:
-            # ユーザーリストをランダムにシャッフルする（任意）
-            # これにより、テスト実行ごとに異なる順序でユーザーが使われるようになります
             random.shuffle(target_users)
             print(f"成功: {len(target_users)} 人のユーザー情報を準備しました。")
 
@@ -43,7 +41,7 @@ def on_test_start(environment, **kwargs):
 class DummyApiUser(HttpUser):
 
     # リクエスト間の待ち時間 (1秒から3秒)
-    wait_time = between(1, 3)
+    wait_time = between(0.1, 0.3)
 
     def on_start(self):
         """
