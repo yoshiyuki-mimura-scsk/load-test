@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: locust-master-web
+spec:
+  to:
+    kind: Service
+    name: locust-master
+  port:
+    targetPort: web-ui
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
