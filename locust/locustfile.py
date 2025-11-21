@@ -55,9 +55,8 @@ class DummyApiUser(HttpUser):
             self.stop()
             return
 
-        # ユーザーリストの末尾から一人分の認証情報を取り出す
-        # .pop() を使うことで、各ワーカーにユニークなユーザーが割り当てられる
-        user_credentials = target_users.pop()
+        # ユーザーリストからランダムに認証情報を取り出す
+        user_credentials = random.choice(target_users)
         self.username = user_credentials.get("username")
         password = user_credentials.get("password")
 
